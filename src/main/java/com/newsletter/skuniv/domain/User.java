@@ -20,9 +20,9 @@ public class User {
     @Column(unique = true, nullable = false)
     private String ip;
 
-    private boolean like = false;
+   private boolean likePost;
 
-    private boolean share = false;
+    private boolean share;
 
     @ManyToOne
     private Post post;
