@@ -21,10 +21,10 @@ public class Post {
 
     private Integer shareCount = 0;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post")
     private Set<Comment> comments = new HashSet<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post")
     private Set<User> users = new HashSet<>();
 
     public void addComment(Comment comment) {

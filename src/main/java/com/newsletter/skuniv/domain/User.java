@@ -27,7 +27,7 @@ public class User {
     @ManyToOne
     private Post post;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
 
     public void addPost(Comment comment) {
