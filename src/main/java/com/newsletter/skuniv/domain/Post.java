@@ -31,4 +31,9 @@ public class Post {
         this.getComments().add(comment);
         comment.setPost(this);
     }
+
+    public void addUser(User user) {
+        this.getUsers().add(user);
+        user.setPost(this);
+    }
 }

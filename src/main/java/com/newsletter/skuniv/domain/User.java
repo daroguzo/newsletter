@@ -3,6 +3,8 @@ package com.newsletter.skuniv.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,4 +26,12 @@ public class User {
 
     @ManyToOne
     private Post post;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
+    public void addPost(Comment comment) {
+        this.getComments().add(comment);
+        comment.setUser(this);
+    }
 }
