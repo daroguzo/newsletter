@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Index</title>
 </head>
 <body>
     <h2>Index Test</h2>
+    <h3><span th:if="user">새로운 손님</span></h3><span th:text="${user.ip}"></span>님
 </body>
 </html>
