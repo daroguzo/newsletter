@@ -6,6 +6,11 @@
 </head>
 <body>
     <h2>Index Test</h2>
-    <h3><span th:if="user">새로운 손님</span></h3><span th:text="${user.ip}"></span>님
+    <h3><span th:if="${user}">
+        새로운 손님
+        <span th:text="${user.ip}">
+
+        </span>님
+    </span></h3>
 </body>
 </html>
