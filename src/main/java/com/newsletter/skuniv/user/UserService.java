@@ -19,8 +19,6 @@ public class UserService {
     public User saveNewUser() {
         User user = User.builder()
                 .ip(getUserIp())
-                .likePost(false)
-                .share(false)
                 .build();
         userRepository.save(user);
         return user;

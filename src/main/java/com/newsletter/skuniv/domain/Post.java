@@ -17,6 +17,9 @@ public class Post {
     @Id @GeneratedValue
     private Long id;
 
+    @Column(nullable = false)
+    private String name;
+
     private Integer likeCount = 0;
 
     private Integer shareCount = 0;
@@ -24,16 +27,34 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private Set<Comment> comments = new HashSet<>();
 
-    @OneToMany(mappedBy = "post")
-    private Set<User> users = new HashSet<>();
+    @OneToMany(mappedBy = "likedPost")
+    private Set<User> likedUsers = new HashSet<>();
+
+    @OneToMany(mappedBy = "sharedPost")
+    private Set<User> sharedUsers = new HashSet<>();
 
     public void addComment(Comment comment) {
         this.getComments().add(comment);
         comment.setPost(this);
     }
 
-    public void addUser(User user) {
-        this.getUsers().add(user);
-        user.setPost(this);
+    public void addLikedUser(User user) {
+        this.getLikedUsers().add(user);
+        user.setLikedPost(this);
+    }
+
+    public void addSharedUser(User user) {
+        this.getLikedUsers().add(user);
+        user.setSharedPost(this);
+    }
+
+    public void deleteLikedUser(User user) {
+        this.getLikedUsers().remove(user);
+        user.setLikedPost(null);
+    }
+
+    public void deleteSharedUser(User user) {
+        this.getSharedUsers().remove(user);
+        user.setSharedPost(null);
     }
 }

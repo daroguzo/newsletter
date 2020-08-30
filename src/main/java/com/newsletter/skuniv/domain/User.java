@@ -20,12 +20,11 @@ public class User {
     @Column(unique = true, nullable = false)
     private String ip;
 
-    private boolean likePost;
-
-    private boolean share;
+    @ManyToOne
+    private Post likedPost;
 
     @ManyToOne
-    private Post post;
+    private Post sharedPost;
 
     @OneToMany(mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
