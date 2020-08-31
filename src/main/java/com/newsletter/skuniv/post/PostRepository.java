@@ -9,8 +9,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     boolean existsByLikedUsers (User user);
     boolean existsBySharedUsers (User user);
 
-    void deleteByLikedUsers (User user);
-    void deleteBySharedUsers (User user);
-
     Post findByName (String name);
 }
