@@ -12,20 +12,70 @@
     </style>
 </head>
 <body>
-<div class="container">
     <div class="container">
-        <div class="py-5 text-center">
+        <div class="py-3 text-center">
             <h2>News 1</h2>
-            <div th:if="${message}">
-                <span th:text="${message}">메시지</span>
-            </div>
-            <form th:action="@{/news1}" method="post">
+        </div>
+
+        <div class="py-3 text-center" th:if="${message}">
+            <span th:text="${message}">메시지</span>
+        </div>
+
+        <div class="row justify-content-center text-center">
+            <form class="needs-validation col-sm-6" th:action="@{/news1}" method="post">
                 <input type="submit" name="like" value="좋아요"> <span th:text="${post.getLikeCount()}"></span>
                 <input type="submit" name="share" value="공유"> <span th:text="${post.getShareCount()}"></span>
             </form>
         </div>
+
+        <div class="py-3 text-center">
+            <form class="needs-validation"
+                  th:action="@{/news1}" th:object="${commentForm}" method="post" novalidate>
+                <div class="form-group">
+                    <label for="content">한줄 댓글 달기</label><br>
+                    <textarea id="content" rows="1" cols="50" required minlength="5" maxlength="50" th:field="*{content}"></textarea><br>
+                    <small id="nicknameHelp" class="form-text text-muted">
+                        5자 이상 50자 이내로 입력하세요.
+                    </small>
+                    <div class="py-3 text-center">
+                        <input type="submit" value="제출">
+                    </div>
+                    <div class="py-3 text-center" th:if="${contentError}">
+                        <small class="form-text text-danger" >댓글 길이를 준수해주세요.</small>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div th:if="${!commentList.isEmpty()}">
+            <div class="row justify-content-center text-center">
+                <form th:action="@{/news1}" method="post">
+                <table class="table-striped table-bordered" id="commentTable">
+                    <thead>
+                    <tr>
+                        <th scope="col" style="width: 3%">#</th>
+                        <th scope="col" style="width: 10%">IP</th>
+                        <th scope="col" style="width: 35%">등록 시기</th>
+                        <th scope="col" style="width: 50%">내용</th>
+                        <th scope="col" style="width: 2%">선택</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="comment : ${commentList}">
+                        <td th:text="${comment.id}">id</td>
+                        <td th:text="${comment.user.ip}">ip</td>
+                        <td th:text="${comment.created}">created</td>
+                        <td th:text="${comment.content}">content</td>
+                        <td><input type="radio" name="commentId" th:value="${comment.id}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                    <input type="submit" value="삭제">
+                </form>
+            </div>
+        </div>
+
     </div>
-</div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"

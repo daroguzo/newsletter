@@ -13,9 +13,6 @@ public class Comment {
     @Id @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
-    private String password;
-
     @Lob
     private String content;
 

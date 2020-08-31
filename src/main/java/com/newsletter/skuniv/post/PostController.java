@@ -1,5 +1,9 @@
 package com.newsletter.skuniv.post;
 
+import com.newsletter.skuniv.comment.CommentForm;
+import com.newsletter.skuniv.comment.CommentRepository;
+import com.newsletter.skuniv.comment.CommentService;
+import com.newsletter.skuniv.domain.Comment;
 import com.newsletter.skuniv.domain.Post;
 import com.newsletter.skuniv.domain.User;
 import com.newsletter.skuniv.user.UserRepository;
@@ -7,12 +11,16 @@ import com.newsletter.skuniv.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.PostConstruct;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Controller
@@ -21,6 +29,8 @@ public class PostController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final CommentService commentService;
+    private final CommentRepository commentRepository;
 
     @PostConstruct
     public void init() {
@@ -42,6 +52,7 @@ public class PostController {
     @GetMapping("/news1")
     public String news1(Model model) {
         Post post = postRepository.findByName("news1");
+        List<Comment> comments = post.getComments();
 
         if (!userRepository.existsByIp(userService.getUserIp())) {
             User user = userService.saveNewUser();
@@ -56,12 +67,20 @@ public class PostController {
             model.addAttribute(user);
         }
         model.addAttribute(post);
+        model.addAttribute(new CommentForm());
+        model.addAttribute("commentList", comments);
         return "news1";
     }
 
     @PostMapping("/news1")
     public String postNews1(RedirectAttributes redirectAttributes,
-                            @RequestParam(required = false) String like, @RequestParam(required = false) String share) {
+                            @RequestParam(required = false) String like, @RequestParam(required = false) String share,
+                            @RequestParam(required = false) Long commentId,
+                            @Valid CommentForm commentForm, Errors errors) {
+        if (errors.hasErrors()) {
+            redirectAttributes.addFlashAttribute("contentError", "댓글 길이를 준수해주세요.");
+            return "redirect:/news1";
+        }
         Post post = postRepository.findByName("news1");
         User user = userRepository.findByIp(userService.getUserIp());
         if (like != null) {
@@ -85,11 +104,23 @@ public class PostController {
                 postRepository.save(post);
                 redirectAttributes.addFlashAttribute("message", "공유 누름");
             }else {
-                post.setShareCount(post.getShareCount() - 1);
-                post.deleteSharedUser(user);
-                postRepository.save(post);
-                redirectAttributes.addFlashAttribute("message", "공유 취소");
+                redirectAttributes.addFlashAttribute("message", "공유는 한번만 할 수 있습니다.");
             }
+        }
+
+        if (commentForm.getContent() != null) {
+            Comment comment = commentService.saveNewComment(commentForm, post, user);
+            post.addComment(comment);
+            user.addComment(comment);
+        }
+
+        if (commentId != null) {
+            Optional<Comment> optionalComment = commentRepository.findById(commentId);
+            if (optionalComment.isPresent()) {
+                post.deleteComment(commentRepository.findById(commentId).get());
+                postRepository.save(post);
+            }
+
         }
         return "redirect:/news1";
     }

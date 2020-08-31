@@ -33,4 +33,9 @@ public class User {
         this.getComments().add(comment);
         comment.setUser(this);
     }
+
+    public void deleteComment(Comment comment) {
+        this.getComments().remove(comment);
+        comment.setUser(null);
+    }
 }

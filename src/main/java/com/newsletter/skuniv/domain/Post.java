@@ -3,7 +3,9 @@ package com.newsletter.skuniv.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -25,7 +27,7 @@ public class Post {
     private Integer shareCount = 0;
 
     @OneToMany(mappedBy = "post")
-    private Set<Comment> comments = new HashSet<>();
+    private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "likedPost")
     private Set<User> likedUsers = new HashSet<>();
@@ -36,6 +38,11 @@ public class Post {
     public void addComment(Comment comment) {
         this.getComments().add(comment);
         comment.setPost(this);
+    }
+
+    public void deleteComment(Comment comment) {
+        this.getComments().remove(comment);
+        comment.setPost(null);
     }
 
     public void addLikedUser(User user) {
