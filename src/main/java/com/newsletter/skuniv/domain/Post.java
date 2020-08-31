@@ -43,6 +43,7 @@ public class Post {
     public void deleteComment(Comment comment) {
         this.getComments().remove(comment);
         comment.setPost(null);
+
     }
 
     public void addLikedUser(User user) {

@@ -117,8 +117,13 @@ public class PostController {
         if (commentId != null) {
             Optional<Comment> optionalComment = commentRepository.findById(commentId);
             if (optionalComment.isPresent()) {
-                post.deleteComment(commentRepository.findById(commentId).get());
-                postRepository.save(post);
+                if (commentRepository.findById(commentId).get().getUser().getIp().equals(user.getIp())) {
+                    post.deleteComment(commentRepository.findById(commentId).get());
+                    commentRepository.deleteById(commentId);
+                    postRepository.save(post);
+                }else {
+                    redirectAttributes.addFlashAttribute("message", "자신의 글만 지울 수 있습니다.");
+                }
             }
 
         }
