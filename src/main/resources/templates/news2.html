@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>news2</title>
+    <style>
+        h1 {
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        p {
+            text-align: justify;
+            padding: 20px;
+            width: 800px;
+            margin: 0 auto;
+        }
+
+        div {
+            text-align: left;
+        }
+
+        img1 {
+            width: 600px;
+            height: 400px;
+            display: block;
+            margin: 0px auto;
+        }
+
+        .container {
+            height: 30px;
+            position: relative;
+        }
+
+        .vertical-center {
+            margin: 0;
+            position: relative;
+            top: 50%;
+            -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+        }
+
+    </style>
+
+</head>
+<body>
+<h1>Minneapolis Residents Won&#39;t Call<br>Cops On Homeless Camp In Park</h1>
+<p><b>By Shannon Cain</b><br>JULY 30, 2020 — 9:41PM</p>
+<figure>
+    <center>
+        <img id="img1"
+             src="/imgs/homeless.jpg" alt="missing">
+        <figcaption>A HOMELESS ENCAMPMENT AT POWDERHORN PARK IN MINNEAPOLIS, MINNESOTA.</figcaption>
+</figure>
+<p>A Minneapolis neighborhood has been overrun by a homeless encampment that’s grown to as many as 300 people — amid an
+    agreement among progressive white residents to not call the police, according to a new report.
+
+    The tent city has popped up in a park in Powderhorn Park — a diverse community of about 9,000 that’s blocks away
+    from where George Floyd was killed last month.
+
+    In light of Floyd’s police-involved death, residents there have vowed to avoid calling the cops, feeling that doing
+    so could put people of color in danger.
+
+    Some citizens have declared, "I will not use the police's security services for the safety of the black neighbor."
+    There was also a 'stop calling police' campaign placard across Minneapolis.
+
+    In view of popular public views, the city decided to pass a bill to reform the police organization and establish a
+    new “Social Safety and Violence Prevention (Safety Bureau)” instead. Officials play the role that the police have
+    played. The city council had taken some of the allegations that the police should be abolished. The bill, which
+    passed the city council, will be submitted to the referendum in November after being reviewed by the city policy
+    committee.
+</p>
+<figure>
+    <center>
+        <form th:action="@{/news2}" method="post">
+            <button type="submit" name="like">
+                <img class="img2"
+                     src="/imgs/like.png"
+                     alt="like"
+                     align="center"
+                     width="30px"
+                     height="30px"
+                     onmouseenter="zoomIn(event)"
+                     onmouseleave="zoomOut(event)"/>
+                <span th:text="${post.getLikeCount()}"><p1></p1></span>
+                <span>&nbsp&nbsp&nbsp</span>
+            </button>
+            <button>
+                <img class="img2"
+                     src="/imgs/comment.png"
+                     alt="comment"
+                     align="center"
+                     width="30px"
+                     height="30px"
+                     onmouseenter="zoomIn(event)"
+                     onmouseleave="zoomOut(event)"/>
+                <span th:text="${commentList.size()}"><p1></p1></span>
+                <span>&nbsp&nbsp&nbsp</span>
+            </button>
+            <button type="submit" name="share">
+                <img class="img2"
+                     src="/imgs/share.png"
+                     alt="share"
+                     align="center"
+                     width="30px"
+                     height="30px"
+                     onmouseenter="zoomIn(event)"
+                     onmouseleave="zoomOut(event)"/>
+                <span th:text="${post.getShareCount()}"><p1></p1></span>
+                <span>&nbsp&nbsp&nbsp</span>
+            </button>
+        </form>
+    </center>
+</figure>
+<div class="container">
+    <center>
+        <img id="img3"
+             src="/imgs/prof.png"
+             width="30px"
+             height="30px"
+        />
+        <form th:action="@{/news2}" method="post" th:object="${commentForm}">
+            <input id="content"  required minlength="5" th:field="*{content}"> <input type="submit" value="submit">
+        </form>
+    </center>
+</div>
+
+<script>
+    function zoomIn(event) {
+        event.target.style.transform = "scale(1.2)";
+        event.target.style.zIndex = 1;
+        event.target.style.transition = "all 0.5s";
+    }
+
+    function zoomOut(event) {
+        event.target.style.transform = "scale(1)";
+        event.target.style.zIndex = 0;
+        event.target.style.transition = "all 0.5s";
+    }
+</script>
+
+</body>
+</html>
