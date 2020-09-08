@@ -36,7 +36,12 @@ public class PostController {
     public void init() {
         Post post1 = new Post();
         post1.setName("news1");
+
+        Post post2 = new Post();
+        post2.setName("news2");
+
         postRepository.save(post1);
+        postRepository.save(post2);
     }
 
     @GetMapping("/")
@@ -49,6 +54,74 @@ public class PostController {
         return "index";
     }
 
+    @GetMapping("/home")
+    public String home(Model model) {
+        Post post = postRepository.findByName("news2");
+        List<Comment> comments = post.getComments();
+
+        if (!userRepository.existsByIp(userService.getUserIp())) {
+            User user = userService.saveNewUser();
+            post.addLikedUser(user);
+            post.addSharedUser(user);
+            model.addAttribute(user);
+
+        } else {
+            User user = userRepository.findByIp(userService.getUserIp());
+            post.addLikedUser(user);
+            post.addSharedUser(user);
+            model.addAttribute(user);
+        }
+        model.addAttribute(post);
+        model.addAttribute(new CommentForm());
+        model.addAttribute("commentList", comments);
+
+        return "home";
+    }
+
+    @PostMapping("/home")
+    public String homePost(RedirectAttributes redirectAttributes,
+                           @RequestParam(required = false) String like, @RequestParam(required = false) String share,
+                           @Valid CommentForm commentForm, Errors errors) {
+        if (errors.hasErrors()) {
+            redirectAttributes.addFlashAttribute("contentError", "댓글 길이를 준수해주세요.");
+            return "redirect:/home";
+        }
+        Post post = postRepository.findByName("news2");
+        User user = userRepository.findByIp(userService.getUserIp());
+        if (like != null) {
+            if (!postRepository.existsByLikedUsers(user)) {
+                post.setLikeCount(post.getLikeCount() + 1);
+                post.addLikedUser(user);
+                postRepository.save(post);
+                redirectAttributes.addFlashAttribute("message", "좋아요 누름");
+            } else {
+                post.setLikeCount(post.getLikeCount() - 1);
+                post.deleteLikedUser(user);
+                postRepository.save(post);
+                redirectAttributes.addFlashAttribute("message", "좋아요 취소");
+            }
+        }
+
+        if (share != null) {
+            if (!postRepository.existsBySharedUsers(user)) {
+                post.setShareCount(post.getShareCount() + 1);
+                post.addSharedUser(user);
+                postRepository.save(post);
+                redirectAttributes.addFlashAttribute("message", "공유 누름");
+            } else {
+                redirectAttributes.addFlashAttribute("message", "공유는 한번만 할 수 있습니다.");
+            }
+        }
+
+        if (commentForm.getContent() != null) {
+            Comment comment = commentService.saveNewComment(commentForm, post, user);
+            post.addComment(comment);
+            user.addComment(comment);
+        }
+        return "redirect:/home";
+    }
+
+
     @GetMapping("/news1")
     public String news1(Model model) {
         Post post = postRepository.findByName("news1");
@@ -60,7 +133,7 @@ public class PostController {
             post.addSharedUser(user);
             model.addAttribute(user);
 
-        }else {
+        } else {
             User user = userRepository.findByIp(userService.getUserIp());
             post.addLikedUser(user);
             post.addSharedUser(user);
@@ -89,7 +162,7 @@ public class PostController {
                 post.addLikedUser(user);
                 postRepository.save(post);
                 redirectAttributes.addFlashAttribute("message", "좋아요 누름");
-            }else {
+            } else {
                 post.setLikeCount(post.getLikeCount() - 1);
                 post.deleteLikedUser(user);
                 postRepository.save(post);
@@ -103,7 +176,7 @@ public class PostController {
                 post.addSharedUser(user);
                 postRepository.save(post);
                 redirectAttributes.addFlashAttribute("message", "공유 누름");
-            }else {
+            } else {
                 redirectAttributes.addFlashAttribute("message", "공유는 한번만 할 수 있습니다.");
             }
         }
@@ -121,12 +194,79 @@ public class PostController {
                     post.deleteComment(commentRepository.findById(commentId).get());
                     commentRepository.deleteById(commentId);
                     postRepository.save(post);
-                }else {
+                } else {
                     redirectAttributes.addFlashAttribute("message", "자신의 글만 지울 수 있습니다.");
                 }
             }
 
         }
         return "redirect:/news1";
+    }
+
+    @GetMapping("/news2")
+    public String news2(Model model) {
+        Post post = postRepository.findByName("news2");
+        List<Comment> comments = post.getComments();
+
+        if (!userRepository.existsByIp(userService.getUserIp())) {
+            User user = userService.saveNewUser();
+            post.addLikedUser(user);
+            post.addSharedUser(user);
+            model.addAttribute(user);
+
+        } else {
+            User user = userRepository.findByIp(userService.getUserIp());
+            post.addLikedUser(user);
+            post.addSharedUser(user);
+            model.addAttribute(user);
+        }
+        model.addAttribute(post);
+        model.addAttribute(new CommentForm());
+        model.addAttribute("commentList", comments);
+
+        return "news2";
+    }
+
+    @PostMapping("/news2")
+    public String postNews2(RedirectAttributes redirectAttributes,
+                            @RequestParam(required = false) String like, @RequestParam(required = false) String share,
+                            @Valid CommentForm commentForm, Errors errors) {
+        if (errors.hasErrors()) {
+            redirectAttributes.addFlashAttribute("contentError", "댓글 길이를 준수해주세요.");
+            return "redirect:/home";
+        }
+        Post post = postRepository.findByName("news2");
+        User user = userRepository.findByIp(userService.getUserIp());
+        if (like != null) {
+            if (!postRepository.existsByLikedUsers(user)) {
+                post.setLikeCount(post.getLikeCount() + 1);
+                post.addLikedUser(user);
+                postRepository.save(post);
+                redirectAttributes.addFlashAttribute("message", "좋아요 누름");
+            } else {
+                post.setLikeCount(post.getLikeCount() - 1);
+                post.deleteLikedUser(user);
+                postRepository.save(post);
+                redirectAttributes.addFlashAttribute("message", "좋아요 취소");
+            }
+        }
+
+        if (share != null) {
+            if (!postRepository.existsBySharedUsers(user)) {
+                post.setShareCount(post.getShareCount() + 1);
+                post.addSharedUser(user);
+                postRepository.save(post);
+                redirectAttributes.addFlashAttribute("message", "공유 누름");
+            } else {
+                redirectAttributes.addFlashAttribute("message", "공유는 한번만 할 수 있습니다.");
+            }
+        }
+
+        if (commentForm.getContent() != null) {
+            Comment comment = commentService.saveNewComment(commentForm, post, user);
+            post.addComment(comment);
+            user.addComment(comment);
+        }
+        return "redirect:/news2";
     }
 }

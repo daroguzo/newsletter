@@ -33,9 +33,9 @@
                   th:action="@{/news1}" th:object="${commentForm}" method="post" novalidate>
                 <div class="form-group">
                     <label for="content">한줄 댓글 달기</label><br>
-                    <textarea id="content" rows="1" cols="50" required minlength="5" maxlength="50" th:field="*{content}"></textarea><br>
+                    <textarea id="content" rows="1" cols="50" required minlength="5" th:field="*{content}"></textarea><br>
                     <small id="nicknameHelp" class="form-text text-muted">
-                        5자 이상 50자 이내로 입력하세요.
+                        5자 이상으로 입력하세요.
                     </small>
                     <div class="py-3 text-center">
                         <input type="submit" value="제출">
