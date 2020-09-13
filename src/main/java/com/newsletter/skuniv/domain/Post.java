@@ -4,9 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -29,11 +27,11 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "likedPost")
-    private Set<User> likedUsers = new HashSet<>();
+    @ManyToMany
+    private List<User> likedUsers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "sharedPost")
-    private Set<User> sharedUsers = new HashSet<>();
+    @ManyToMany
+    private List<User> sharedUsers = new ArrayList<>();
 
     public void addComment(Comment comment) {
         this.getComments().add(comment);
@@ -48,21 +46,21 @@ public class Post {
 
     public void addLikedUser(User user) {
         this.getLikedUsers().add(user);
-        user.setLikedPost(this);
+//        user.setLikedPost(this);
     }
 
     public void addSharedUser(User user) {
         this.getLikedUsers().add(user);
-        user.setSharedPost(this);
+//        user.setSharedPost(this);
     }
 
     public void deleteLikedUser(User user) {
         this.getLikedUsers().remove(user);
-        user.setLikedPost(null);
+//        user.setLikedPost(null);
     }
 
     public void deleteSharedUser(User user) {
         this.getSharedUsers().remove(user);
-        user.setSharedPost(null);
+//        user.setSharedPost(null);
     }
 }

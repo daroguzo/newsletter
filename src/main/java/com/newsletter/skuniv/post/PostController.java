@@ -45,6 +45,8 @@ public class PostController {
 
         postRepository.save(post1);
         postRepository.save(post2);
+
+        postRepository.save(post3);
     }
 
     @GetMapping("/")
@@ -59,60 +61,67 @@ public class PostController {
 
     @GetMapping("/home")
     public String home(Model model) {
-        Post post = postRepository.findByName("news2");
-        List<Comment> comments = post.getComments();
+        Post post1 = postRepository.findByName("news2");
+        Post post2 = postRepository.findByName("news3");
+
+        List<Comment> comments1 = post1.getComments();
+        List<Comment> comments2 = post2.getComments();
 
         if (!userRepository.existsByIp(userService.getUserIp())) {
             User user = userService.saveNewUser();
-            post.addLikedUser(user);
-            post.addSharedUser(user);
             model.addAttribute(user);
 
         } else {
             User user = userRepository.findByIp(userService.getUserIp());
-            post.addLikedUser(user);
-            post.addSharedUser(user);
             model.addAttribute(user);
         }
-        model.addAttribute(post);
+        model.addAttribute("post1", post1);
+        model.addAttribute("post2", post2);
         model.addAttribute(new CommentForm());
-        model.addAttribute("commentList", comments);
+        model.addAttribute("comments1", comments1);
+        model.addAttribute("comments2", comments2);
 
         return "home";
     }
 
     @PostMapping("/home")
-    public String homePost(RedirectAttributes redirectAttributes,
-                           @RequestParam(required = false) String like, @RequestParam(required = false) String share,
-                           @Valid CommentForm commentForm, Errors errors) {
-        if (errors.hasErrors()) {
-            redirectAttributes.addFlashAttribute("contentError", "댓글 길이를 준수해주세요.");
-            return "redirect:/home";
-        }
+    public String homePost(@RequestParam(required = false) String like1, @RequestParam(required = false) String share1,
+                           @RequestParam(required = false) String like2, @RequestParam(required = false) String share2,
+                           @Valid CommentForm commentForm) {
         Post post = postRepository.findByName("news2");
+        Post post2 = postRepository.findByName("news3");
         User user = userRepository.findByIp(userService.getUserIp());
-        if (like != null) {
-            if (!postRepository.existsByLikedUsers(user)) {
-                post.setLikeCount(post.getLikeCount() + 1);
-                post.addLikedUser(user);
+        if (like1 != null) {
+            if (!post.getLikedUsers().contains(user)) {
+                post.getLikedUsers().add(user);
                 postRepository.save(post);
-                redirectAttributes.addFlashAttribute("message", "좋아요 누름");
             } else {
-                post.setLikeCount(post.getLikeCount() - 1);
-                post.deleteLikedUser(user);
+                post.getLikedUsers().remove(user);
                 postRepository.save(post);
-                redirectAttributes.addFlashAttribute("message", "좋아요 취소");
             }
         }
 
-        if (share != null) {
-            if (!postRepository.existsBySharedUsers(user)) {
-                post.setShareCount(post.getShareCount() + 1);
-                post.addSharedUser(user);
-                postRepository.save(post);
-                redirectAttributes.addFlashAttribute("message", "공유 누름");
+        if (like2 != null) {
+            if (!post2.getLikedUsers().contains(user)) {
+                post2.addLikedUser(user);
+                postRepository.save(post2);
             } else {
-                redirectAttributes.addFlashAttribute("message", "공유는 한번만 할 수 있습니다.");
+                post2.deleteLikedUser(user);
+                postRepository.save(post2);
+            }
+        }
+
+        if (share1 != null) {
+            if (!post.getSharedUsers().contains(user)) {
+                post.getSharedUsers().add(user);
+                postRepository.save(post);
+            }
+        }
+
+        if (share2 != null) {
+            if (!post2.getSharedUsers().contains(user)) {
+                post2.getSharedUsers().add(user);
+                postRepository.save(post2);
             }
         }
 
@@ -161,12 +170,10 @@ public class PostController {
         User user = userRepository.findByIp(userService.getUserIp());
         if (like != null) {
             if (!postRepository.existsByLikedUsers(user)) {
-                post.setLikeCount(post.getLikeCount() + 1);
                 post.addLikedUser(user);
                 postRepository.save(post);
                 redirectAttributes.addFlashAttribute("message", "좋아요 누름");
             } else {
-                post.setLikeCount(post.getLikeCount() - 1);
                 post.deleteLikedUser(user);
                 postRepository.save(post);
                 redirectAttributes.addFlashAttribute("message", "좋아요 취소");
@@ -175,7 +182,6 @@ public class PostController {
 
         if (share != null) {
             if (!postRepository.existsBySharedUsers(user)) {
-                post.setShareCount(post.getShareCount() + 1);
                 post.addSharedUser(user);
                 postRepository.save(post);
                 redirectAttributes.addFlashAttribute("message", "공유 누름");
@@ -205,6 +211,71 @@ public class PostController {
         }
         return "redirect:/news1";
     }
+
+    @GetMapping("/news3")
+    public String news3(Model model) {
+        Post post = postRepository.findByName("news3");
+        List<Comment> comments = post.getComments();
+
+        if (!userRepository.existsByIp(userService.getUserIp())) {
+            User user = userService.saveNewUser();
+            post.addLikedUser(user);
+            post.addSharedUser(user);
+            model.addAttribute(user);
+
+        } else {
+            User user = userRepository.findByIp(userService.getUserIp());
+            post.addLikedUser(user);
+            post.addSharedUser(user);
+            model.addAttribute(user);
+        }
+        model.addAttribute(post);
+        model.addAttribute(new CommentForm());
+        model.addAttribute("commentList", comments);
+
+        return "news2";
+    }
+
+    @PostMapping("/news3")
+    public String postNews3(RedirectAttributes redirectAttributes,
+                            @RequestParam(required = false) String like, @RequestParam(required = false) String share,
+                            @Valid CommentForm commentForm, Errors errors) {
+        if (errors.hasErrors()) {
+            redirectAttributes.addFlashAttribute("contentError", "댓글 길이를 준수해주세요.");
+            return "redirect:/home";
+        }
+        Post post = postRepository.findByName("news2");
+        User user = userRepository.findByIp(userService.getUserIp());
+        if (like != null) {
+            if (!postRepository.existsByLikedUsers(user)) {
+                post.addLikedUser(user);
+                postRepository.save(post);
+                redirectAttributes.addFlashAttribute("message", "좋아요 누름");
+            } else {
+                post.deleteLikedUser(user);
+                postRepository.save(post);
+                redirectAttributes.addFlashAttribute("message", "좋아요 취소");
+            }
+        }
+
+        if (share != null) {
+            if (!postRepository.existsBySharedUsers(user)) {
+                post.addSharedUser(user);
+                postRepository.save(post);
+                redirectAttributes.addFlashAttribute("message", "공유 누름");
+            } else {
+                redirectAttributes.addFlashAttribute("message", "공유는 한번만 할 수 있습니다.");
+            }
+        }
+
+        if (commentForm.getContent() != null) {
+            Comment comment = commentService.saveNewComment(commentForm, post, user);
+            post.addComment(comment);
+            user.addComment(comment);
+        }
+        return "redirect:/news2";
+    }
+
 
     @GetMapping("/news2")
     public String news2(Model model) {
@@ -242,12 +313,10 @@ public class PostController {
         User user = userRepository.findByIp(userService.getUserIp());
         if (like != null) {
             if (!postRepository.existsByLikedUsers(user)) {
-                post.setLikeCount(post.getLikeCount() + 1);
                 post.addLikedUser(user);
                 postRepository.save(post);
                 redirectAttributes.addFlashAttribute("message", "좋아요 누름");
             } else {
-                post.setLikeCount(post.getLikeCount() - 1);
                 post.deleteLikedUser(user);
                 postRepository.save(post);
                 redirectAttributes.addFlashAttribute("message", "좋아요 취소");
@@ -256,7 +325,6 @@ public class PostController {
 
         if (share != null) {
             if (!postRepository.existsBySharedUsers(user)) {
-                post.setShareCount(post.getShareCount() + 1);
                 post.addSharedUser(user);
                 postRepository.save(post);
                 redirectAttributes.addFlashAttribute("message", "공유 누름");

@@ -4,10 +4,11 @@
     <link type="text/css" rel="stylesheet" href="/ust.css"/>
 </head>
 <body>
+
 <div class="header1">
     <div id="img3" class="header1"><img src="/imgs/logo.png" id="img3"/></div>
     <div id="searcharea" class="header1"><input placeholder="search here..." type="text" id="searchbox"/></div>
-    <div id="profilearea" class="header1"><a href="profile.php"><img src="prof.png" id="profpic"/></a></div>
+    <div id="profilearea" class="header1"><a href="profile.php"><img src="/imgs/prof.png" id="profpic"/></a></div>
     <div id="profilearea1" class="header1"><a href="profile.php">Profile</a></div>
     <div id="profilearea3" class="header1">|</div>
     <div id="profilearea4" class="header1">Home</div>
@@ -81,32 +82,31 @@
 </div>
 
 <div class="post1"><img src="/imgs/prof.png" id="profpic"/><br><br><a th:href="@{/news2}"><img src="/imgs/pic1.png"
-                                                                                                        height="411"
+                                                                                               height="411"
 
-                                                                                                        width="580"/></a><br><br>
+                                                                                               width="580"/></a><br><br>
     <form th:action="@{/home}" method="post">
-        <button class="unstyled-button" type="submit" name="like">
+        <button class="unstyled-button" type="submit" name="like1">
             <p6 onMouseover="this.style.background='Lightgrey';" onMouseout="this.style.background='white';">
-                Like <span th:text="${post.getLikeCount()}"></span>
+                Like <span th:text="${post1.getLikedUsers().size()}"></span>
             </p6>
         </button>
         <button class="unstyled-button" id="comment1">
             <p6 onMouseover="this.style.background='Lightgrey';" onMouseout="this.style.background='white';">
-                Comment <span th:text="${commentList.size()}"></span>
+                Comment <span th:text="${comments1.size()}"></span>
             </p6>
         </button>
         <span>&nbsp&nbsp</span>
-        <button class="unstyled-button" type="submit" name="share">
+        <button class="unstyled-button" type="submit" name="share1">
             <p6 onMouseover="this.style.background='Lightgrey';" onMouseout="this.style.background='white';">
-                Share <span th:text="${post.shareCount}"></span>
+                Share <span th:text="${post1.getSharedUsers().size()}"></span>
             </p6>
         </button>
     </form>
-    <br>
     <hr>
     <p1>Pearl Berger</p1>
     <p2> and </p2>
-    <span th:text=" ${post.getLikeCount()}"></span>
+    <span th:text=" ${post1.getLikedUsers().size()}"></span>
     <p2> others like this</p2>
     <div id="post2text" class="post1">
         <p3>MNNEWS</p3>
@@ -122,13 +122,29 @@
 </div>
 
 <div class="post2"><img src="/imgs/prof.png" id="profpic"/><br><br><img src="/imgs/pic2.png" height="411"
-                                                                                 width="580"/><br><br>
-    <p6>Like Comment Share</p6>
-    <br>
+                                                                        width="580"/><br><br>
+    <form th:action="@{/home}" method="post">
+        <button class="unstyled-button" type="submit" name="like2">
+            <p6 onMouseover="this.style.background='Lightgrey';" onMouseout="this.style.background='white';">
+                Like <span th:text="${post2.getLikedUsers().size()}"></span>
+            </p6>
+        </button>
+        <button class="unstyled-button" id="comment2">
+            <p6 onMouseover="this.style.background='Lightgrey';" onMouseout="this.style.background='white';">
+                Comment <span th:text="${comments2.size()}"></span>
+            </p6>
+        </button>
+        <span>&nbsp&nbsp</span>
+        <button class="unstyled-button" type="submit" name="share2">
+            <p6 onMouseover="this.style.background='Lightgrey';" onMouseout="this.style.background='white';">
+                Share <span th:text="${post2.getSharedUsers().size()}"></span>
+            </p6>
+        </button>
+    </form>
     <hr>
     <p1>Jules Valenzuela</p1>
     <p2> and</p2>
-    <p1> 5 others</p1>
+    <span th:text=" ${post2.getLikedUsers().size()}"></span>
     <p2> like this</p2>
     <div id="post2text" class="post2">
         <p3>Martin Watson</p3>
@@ -140,7 +156,7 @@
 </div>
 
 <div class="post3"><img src="/imgs/prof.png" id="profpic"/><br><br><img src="/imgs/pic3.png" height="411"
-                                                                                 width="580"/><br><br>
+                                                                        width="580"/><br><br>
     <p6>Like Comment Share</p6>
     <br>
     <hr>
@@ -171,7 +187,7 @@
 </div>
 
 <div class="post5"><img src="/imgs/prof.png" id="profpic"/><br><br><img src="/imgs/pic5.png" height="600"
-                                                                                 width="580"/><br><br>
+                                                                        width="580"/><br><br>
     <p6>Like Comment Share</p6>
     <br>
     <hr>
@@ -233,20 +249,20 @@
     <div id="chatnamebox4" class="chat-sidebar">Carrie Prince</div>
     <div id="chatnamebox5" class="chat-sidebar">Delbert Valencia</div>
     <div id="chatnamebox6" class="chat-sidebar">Deshawn Armstrong</div>
-    <div id="chatnameboxp1" class="chat-sidebar"><img src="prof.png" id="profpic"/></div>
-    <div id="chatnameboxp2" class="chat-sidebar"><img src="prof.png" id="profpic"/></div>
-    <div id="chatnameboxp3" class="chat-sidebar"><img src="prof.png" id="profpic"/></div>
-    <div id="chatnameboxp4" class="chat-sidebar"><img src="prof.png" id="profpic"/></div>
-    <div id="chatnameboxp5" class="chat-sidebar"><img src="prof.png" id="profpic"/></div>
-    <div id="chatnameboxp6" class="chat-sidebar"><img src="prof.png" id="profpic"/></div>
-    <div id="chatnameboxp7" class="chat-sidebar"><img src="prof.png" id="profpic"/></div>
+    <div id="chatnameboxp1" class="chat-sidebar"><img src="/imgs/prof.png" id="profpic"/></div>
+    <div id="chatnameboxp2" class="chat-sidebar"><img src="/imgs/prof.png" id="profpic"/></div>
+    <div id="chatnameboxp3" class="chat-sidebar"><img src="/imgs/prof.png" id="profpic"/></div>
+    <div id="chatnameboxp4" class="chat-sidebar"><img src="/imgs/prof.png" id="profpic"/></div>
+    <div id="chatnameboxp5" class="chat-sidebar"><img src="/imgs/prof.png" id="profpic"/></div>
+    <div id="chatnameboxp6" class="chat-sidebar"><img src="/imgs/prof.png" id="profpic"/></div>
+    <div id="chatnameboxp7" class="chat-sidebar"><img src="/imgs/prof.png" id="profpic"/></div>
 </div>
 
 <div class="header10"></div>
 
 <script>
     document.getElementById('comment1').onclick = function () {
-        document.getElementById('commentbox1').focus();
+        document.getElementById('commentboxpos2').focus();
     };
 </script>
 
