@@ -40,6 +40,9 @@ public class PostController {
         Post post2 = new Post();
         post2.setName("news2");
 
+        Post post3 = new Post();
+        post3.setName("news3");
+
         postRepository.save(post1);
         postRepository.save(post2);
     }
